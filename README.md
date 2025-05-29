@@ -18,3 +18,7 @@ To add a new song to the collection:
 4. Submit a pull request
 
 The website automatically updates when changes are merged to the main branch.
+
+## License
+
+This project is currently offered with no license.
