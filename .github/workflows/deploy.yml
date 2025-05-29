@@ -74,6 +74,18 @@ jobs:
                     display: inline-block;
                 }
                 .pdf-button:hover { background: #005a87; }
+                .add-song { 
+                    font-size: 18px; 
+                    font-weight: bold; 
+                    cursor: pointer; 
+                    padding: 10px; 
+                    background: #f5f5f5; 
+                    text-align: center; 
+                    text-decoration: none; 
+                    color: #333; 
+                    display: block;
+                }
+                .add-song:hover { background: #e5e5e5; }
             </style>
             <script>
                 function toggleSong(songId) {
@@ -128,6 +140,9 @@ jobs:
         
         cat >> _site/index.html << 'EOF'
             </ul>
+            <div class="song-item">
+                <a href="https://github.com/0x213F/colors-music-collective" class="add-song" target="_blank">+ Add Song</a>
+            </div>
         </body>
         </html>
         EOF
