@@ -26,10 +26,10 @@ jobs:
     - name: Setup Pages
       uses: actions/configure-pages@v4
       
-    - name: Install LilyPond
+    - name: Install LilyPond and jq
       run: |
         sudo apt-get update
-        sudo apt-get install -y lilypond
+        sudo apt-get install -y lilypond jq
         
     - name: Convert LilyPond files to PDF
       run: |
@@ -95,16 +95,24 @@ jobs:
         for song_dir in songs/*/; do
           if [ -d "$song_dir" ]; then
             song_name=$(basename "$song_dir")
+            
+            # Read info from JSON file
+            title="$song_name"
+            description=""
+            if [ -f "$song_dir/info.json" ]; then
+              # Extract title and description from JSON
+              title=$(jq -r '.title // "'"$song_name"'"' "$song_dir/info.json")
+              description=$(jq -r '.description // ""' "$song_dir/info.json")
+            fi
+            
             echo "                <li class=\"song-item\">" >> _site/index.html
-            echo "                    <div class=\"song-name\" onclick=\"toggleSong('$song_name')\">$song_name</div>" >> _site/index.html
+            echo "                    <div class=\"song-name\" onclick=\"toggleSong('$song_name')\">$title</div>" >> _site/index.html
             echo "                    <div id=\"$song_name-details\" class=\"song-details\">" >> _site/index.html
             
-            # Add description if txt file exists
-            if [ -f "$song_dir$song_name.txt" ]; then
+            # Add description if available
+            if [ -n "$description" ]; then
               echo "                        <div class=\"song-description\">" >> _site/index.html
-              sed 's/$/\\/' "$song_dir$song_name.txt" | sed 's/&/\&amp;/g; s/</\&lt;/g; s/>/\&gt;/g' | while IFS= read -r line; do
-                echo "                            $line<br>" >> _site/index.html
-              done
+              echo "$description" | sed 's/&/\&amp;/g; s/</\&lt;/g; s/>/\&gt;/g; s/"/\&quot;/g' >> _site/index.html
               echo "                        </div>" >> _site/index.html
             fi
             
