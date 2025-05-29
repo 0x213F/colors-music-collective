@@ -26,6 +26,26 @@ jobs:
     - name: Setup Pages
       uses: actions/configure-pages@v4
       
+    - name: Install LilyPond
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y lilypond
+        
+    - name: Convert LilyPond files to PDF
+      run: |
+        mkdir -p _site/pdfs
+        for song_dir in songs/*/; do
+          if [ -d "$song_dir" ]; then
+            song_name=$(basename "$song_dir")
+            for ly_file in "$song_dir"*.ly; do
+              if [ -f "$ly_file" ]; then
+                echo "Converting $ly_file to PDF..."
+                lilypond --output=_site/pdfs/ "$ly_file"
+              fi
+            done
+          fi
+        done
+        
     - name: Generate HTML
       run: |
         mkdir -p _site
@@ -41,8 +61,30 @@ jobs:
                 h1 { color: #333; }
                 .song-list { list-style: none; padding: 0; }
                 .song-item { margin: 10px 0; padding: 10px; border: 1px solid #ddd; border-radius: 5px; }
-                .song-name { font-size: 18px; font-weight: bold; }
+                .song-name { font-size: 18px; font-weight: bold; cursor: pointer; padding: 10px; background: #f5f5f5; }
+                .song-name:hover { background: #e5e5e5; }
+                .song-details { display: none; padding: 15px; background: white; }
+                .song-description { margin-bottom: 15px; line-height: 1.6; }
+                .pdf-button { 
+                    background: #007cba; 
+                    color: white; 
+                    padding: 8px 16px; 
+                    text-decoration: none; 
+                    border-radius: 4px; 
+                    display: inline-block;
+                }
+                .pdf-button:hover { background: #005a87; }
             </style>
+            <script>
+                function toggleSong(songId) {
+                    const details = document.getElementById(songId + '-details');
+                    if (details.style.display === 'none' || details.style.display === '') {
+                        details.style.display = 'block';
+                    } else {
+                        details.style.display = 'none';
+                    }
+                }
+            </script>
         </head>
         <body>
             <h1>Colors Music Collective</h1>
@@ -54,7 +96,24 @@ jobs:
           if [ -d "$song_dir" ]; then
             song_name=$(basename "$song_dir")
             echo "                <li class=\"song-item\">" >> _site/index.html
-            echo "                    <div class=\"song-name\">$song_name</div>" >> _site/index.html
+            echo "                    <div class=\"song-name\" onclick=\"toggleSong('$song_name')\">$song_name</div>" >> _site/index.html
+            echo "                    <div id=\"$song_name-details\" class=\"song-details\">" >> _site/index.html
+            
+            # Add description if txt file exists
+            if [ -f "$song_dir$song_name.txt" ]; then
+              echo "                        <div class=\"song-description\">" >> _site/index.html
+              sed 's/$/\\/' "$song_dir$song_name.txt" | sed 's/&/\&amp;/g; s/</\&lt;/g; s/>/\&gt;/g' | while IFS= read -r line; do
+                echo "                            $line<br>" >> _site/index.html
+              done
+              echo "                        </div>" >> _site/index.html
+            fi
+            
+            # Add PDF button if ly file exists
+            if [ -f "$song_dir$song_name.ly" ]; then
+              echo "                        <a href=\"pdfs/$song_name.pdf\" class=\"pdf-button\" target=\"_blank\">Open PDF</a>" >> _site/index.html
+            fi
+            
+            echo "                    </div>" >> _site/index.html
             echo "                </li>" >> _site/index.html
           fi
         done
