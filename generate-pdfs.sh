@@ -28,8 +28,8 @@ for song_dir in songs/*/; do
       if [ -f "$ly_file" ]; then
         echo "Converting $ly_file to PDF..."
         
-        # Generate PDF in the same directory as the .ly file
-        lilypond --output="$song_dir" "$ly_file"
+        # Generate PDF only (no MIDI) in the same directory as the .ly file
+        lilypond --pdf --output="$song_dir" "$ly_file"
         
         if [ $? -eq 0 ]; then
           echo "✅ Generated: ${song_dir}${song_name}.pdf"
