@@ -19,6 +19,27 @@ To add a new song to the collection:
 
 The website automatically updates when changes are merged to the main branch.
 
+## Local Development
+
+For local testing and development on macOS:
+
+### Setup
+```bash
+# Install LilyPond and dependencies
+./install-deps.sh
+```
+
+### Generate PDFs
+```bash
+# Generate PDFs for all songs
+./generate-pdfs.sh
+
+# Generate PDF for a specific song
+./generate-pdfs.sh dont-forget
+```
+
+Note: Local PDFs are for testing only and will not be committed to git.
+
 ## License
 
 This project is currently offered with no license.
