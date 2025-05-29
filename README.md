@@ -31,20 +31,14 @@ For local testing and development on macOS:
 
 ### Generate PDFs
 ```bash
-# Generate PDFs for all songs (default)
+# Generate files for all songs
 ./generate-pdfs.sh
 
-# Generate PDF for a specific song
+# Generate files for a specific song
 ./generate-pdfs.sh fables-of-faubus
-
-# Generate all file types (PDF, MIDI, etc.) for all songs
-./generate-pdfs.sh --all
-
-# Generate all file types for a specific song
-./generate-pdfs.sh --all fables-of-faubus
 ```
 
-Note: Local PDFs are for testing only and will not be committed to git.
+Note: Local files are for testing only and will not be committed to git.
 
 ## License
 

@@ -3,3 +3,4 @@
 
 # Local PDF files (generated for testing only)
 songs/**/*.pdf
+songs/**/*.midi
