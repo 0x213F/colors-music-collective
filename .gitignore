@@ -4,3 +4,7 @@
 # Local PDF files (generated for testing only)
 songs/**/*.pdf
 songs/**/*.midi
+
+# Published score and playback references for Aaj Shanibar
+!songs/aaj-shanibar/*.pdf
+!songs/aaj-shanibar/*.midi
