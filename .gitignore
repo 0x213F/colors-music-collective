@@ -8,3 +8,7 @@ songs/**/*.midi
 # Published score and playback references for Aaj Shanibar
 !songs/aaj-shanibar/*.pdf
 !songs/aaj-shanibar/*.midi
+
+# Published score and playback references for Compared to What
+!songs/compared-to-what/*.pdf
+!songs/compared-to-what/*.midi
